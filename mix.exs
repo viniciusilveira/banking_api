@@ -20,12 +20,12 @@ defmodule BankingApi.MixProject do
   def application do
     [
       mod: {BankingApi.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:ex_machina, :logger, :runtime_tools]
     ]
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "test/factories", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
@@ -37,6 +37,8 @@ defmodule BankingApi.MixProject do
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_swagger, "~> 0.8"},
       {:ex_json_schema, "~> 0.5"},
+      {:ex_machina, "~> 2.3"},
+      {:faker, "~> 0.12", only: :test},
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
