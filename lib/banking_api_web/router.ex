@@ -8,4 +8,19 @@ defmodule BankingApiWeb.Router do
   scope "/api", BankingApiWeb do
     pipe_through :api
   end
+
+  scope "/api/documentation" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :banking_api,
+      swagger_file: "swagger.json"
+  end
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "Banking Api"
+      }
+    }
+  end
 end
