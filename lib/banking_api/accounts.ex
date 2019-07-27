@@ -7,6 +7,7 @@ defmodule BankingApi.Accounts do
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   alias BankingApi.Accounts.User
+  alias BankingApi.CheckingAccounts
   alias BankingApi.Guardian
   alias BankingApi.Repo
 
@@ -73,6 +74,11 @@ defmodule BankingApi.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
+    attrs =
+      Map.merge(attrs, %{
+        "checking_account" => %{number: CheckingAccounts.generate_number(), balance: 100_000}
+      })
+
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
