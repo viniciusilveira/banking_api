@@ -4,7 +4,7 @@ defmodule BankingApiWeb.UserControllerTest do
   import BankingApi.Factory
 
   @create_attrs params_for(:user)
-  @invalid_attrs %{email: nil, name: nil, password_hash: nil}
+  @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -21,7 +21,37 @@ defmodule BankingApiWeb.UserControllerTest do
 
       assert response["email"] == @create_attrs.email
       assert response["name"] == @create_attrs.name
-      assert response["password_hash"] == @create_attrs.password_hash
+    end
+
+    test "renders error when password is invalid", %{conn: conn} do
+      user_attrs = params_for(:user, password: "passwd", password_confirmation: "passwd")
+      conn = post(conn, Routes.user_path(conn, :create), user: user_attrs)
+
+      assert %{"errors" => %{"password" => ["should be at least 8 character(s)"]}} ==
+               json_response(conn, 422)
+    end
+
+    test "renders error when password confirmation is invalid", %{conn: conn} do
+      user_attrs = params_for(:user, password: "passwd1234", password_confirmation: "passwd1243")
+      conn = post(conn, Routes.user_path(conn, :create), user: user_attrs)
+
+      assert %{"errors" => %{"password_confirmation" => ["does not match confirmation"]}} ==
+               json_response(conn, 422)
+    end
+
+    test "renders error when email is invalid", %{conn: conn} do
+      user_attrs = params_for(:user, email: "invalid.com.br")
+      conn = post(conn, Routes.user_path(conn, :create), user: user_attrs)
+
+      assert %{"errors" => %{"email" => ["has invalid format"]}} == json_response(conn, 422)
+    end
+
+    test "renders error when email already been taken", %{conn: conn} do
+      user = insert(:user)
+      user_attrs = params_for(:user, email: user.email)
+      conn = post(conn, Routes.user_path(conn, :create), user: user_attrs)
+
+      assert %{"errors" => %{"email" => ["has already been taken"]}} = json_response(conn, 422)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

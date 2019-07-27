@@ -9,7 +9,8 @@ defmodule BankingApi.UserFactory do
         %User{
           name: Internet.user_name(),
           email: Internet.email(),
-          password_hash: "passwd"
+          password: "passwd1234",
+          password_confirmation: "passwd1234"
         }
       end
     end
