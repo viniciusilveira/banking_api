@@ -8,7 +8,8 @@ defmodule BankingApiWeb.Router do
   scope "/api", BankingApiWeb do
     pipe_through :api
 
-    resources "/users", UserController, only: [:create, :show]
+    post "/sign_up", UserController, :create
+    post "/sign_in", UserController, :sign_in
   end
 
   scope "/api/documentation" do

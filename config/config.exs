@@ -35,6 +35,10 @@ config :banking_api, :phoenix_swagger,
     ]
   }
 
+config :banking_api, BankingApi.Guardian,
+  issuer: "bankingApi",
+  secret_key: "RZRHk8FicoGygna7RBcb89h62OKsIwP5vRfAsmb4QEtojIt93vqsv3hQP3uDBIM1"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
