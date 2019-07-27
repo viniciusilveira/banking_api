@@ -87,5 +87,28 @@ defmodule BankingApi.AccountsTest do
                 ]
               }} = Accounts.create_user(user_attrs)
     end
+
+    test "token_sign_in/2 with valid data", %{user: user} do
+      assert {:ok, _token,
+              %{
+                "aud" => _aud,
+                "exp" => _exp,
+                "iat" => _iat,
+                "iss" => "bankingApi",
+                "jti" => _jti,
+                "nbf" => _nbf,
+                "sub" => _sub,
+                "typ" => "access"
+              }} = Accounts.token_sign_in(user.email, user.password)
+    end
+
+    test "token_sign_in/2 with wrong password", %{user: user} do
+      assert {:error, :unauthorized} == Accounts.token_sign_in(user.email, "wrongpasswd")
+    end
+
+    test "token_sign_in/2 with wrong email", %{user: user} do
+      assert {:error, :unauthorized} ==
+               Accounts.token_sign_in("wrongemail@wrong.com", user.password)
+    end
   end
 end
