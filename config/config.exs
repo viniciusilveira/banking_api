@@ -25,16 +25,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :banking_api, :phoenix_swagger,
-  swagger_files: %{
-    "priv/static/swagger.json" => [
-      # phoenix routes will be converted to swagger paths
-      router: BankingApiWeb.Router,
-      # (optional) endpoint config used to set host, port and https schemes.
-      endpoint: BankingApiWeb.Endpoint
-    ]
-  }
-
 config :banking_api, BankingApi.Guardian,
   issuer: "bankingApi",
   secret_key: "RZRHk8FicoGygna7RBcb89h62OKsIwP5vRfAsmb4QEtojIt93vqsv3hQP3uDBIM1"
