@@ -24,7 +24,7 @@ defmodule BankingApi.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id), do: User |> Repo.get!(id) |> Repo.preload([:checking_account])
 
   def token_sign_in(email, password) do
     case email_password_auth(email, password) do

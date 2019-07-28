@@ -3,6 +3,7 @@ defmodule BankingApi.Accounts.User do
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]
   import Ecto.Changeset
   alias BankingApi.Accounts.User
+  alias BankingApi.CheckingAccounts.CheckingAccount
 
   @required_fields ~w(email name password password_confirmation)a
 
@@ -12,6 +13,7 @@ defmodule BankingApi.Accounts.User do
     field :password_hash, :string
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
+    belongs_to :checking_account, CheckingAccount
 
     timestamps()
   end
@@ -20,6 +22,7 @@ defmodule BankingApi.Accounts.User do
   def changeset(%User{} = user, attrs) do
     user
     |> cast(attrs, @required_fields)
+    |> cast_assoc(:checking_account)
     |> validate_required(@required_fields)
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)

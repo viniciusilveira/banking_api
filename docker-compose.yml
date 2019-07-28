@@ -2,6 +2,8 @@ version: '3.2'
 services:
   db:
     image: postgres:9.6
+    volumes:
+      - "./volumes:/var/lib/postgresql/data"
 
   web:
     build: .
