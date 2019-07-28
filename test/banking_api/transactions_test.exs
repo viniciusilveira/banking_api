@@ -6,15 +6,6 @@ defmodule BankingApi.TransactionTest do
   alias BankingApi.Transactions.Transaction
 
   describe "transactions" do
-    test "list_transactions/0 returns all transactions" do
-      transaction = insert(:withdrawal)
-      assert [return_transaction] = Transactions.list_transactions()
-
-      assert return_transaction.id == transaction.id
-      assert return_transaction.value == transaction.value
-      assert return_transaction.type == transaction.type
-    end
-
     test "get_transaction!/1 returns the transaction with given id" do
       transaction = insert(:withdrawal)
       assert return_transaction = Transactions.get_transaction!(transaction.id)

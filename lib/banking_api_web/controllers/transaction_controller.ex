@@ -9,11 +9,6 @@ defmodule BankingApiWeb.TransactionController do
 
   action_fallback BankingApiWeb.FallbackController
 
-  def index(conn, _params) do
-    transactions = Transactions.list_transactions()
-    render(conn, "index.json", transactions: transactions)
-  end
-
   def create(conn, %{"transaction" => %{"type" => "withdrawal"} = transaction_params}) do
     with %User{} = user <- Guardian.Plug.current_resource(conn),
          %CheckingAccount{} = drawee_checking_account <-
