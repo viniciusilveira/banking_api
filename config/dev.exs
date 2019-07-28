@@ -52,5 +52,5 @@ config :banking_api, BankingApi.Repo,
   username: "postgres",
   password: "",
   database: "banking_api_dev",
-  hostname: "db",
+  hostname: "localhost",
   pool_size: 10

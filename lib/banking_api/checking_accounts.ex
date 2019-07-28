@@ -6,6 +6,7 @@ defmodule BankingApi.CheckingAccounts do
   import Ecto.Query, warn: false
   alias BankingApi.Repo
 
+  alias BankingApi.Accounts.User
   alias BankingApi.CheckingAccounts.CheckingAccount
 
   def generate_number do
@@ -54,6 +55,17 @@ defmodule BankingApi.CheckingAccounts do
   """
   def get_checking_account!(id), do: Repo.get!(CheckingAccount, id)
 
+  def get_checking_account_by_user_and_number(user_id, number) do
+    query =
+      from user in User,
+        join: checking_account in assoc(user, :checking_account),
+        where: checking_account.number == ^number,
+        where: user.id == ^user_id,
+        select: checking_account
+
+    Repo.one!(query)
+  end
+
   @doc """
   Updates a checking_account.
 
@@ -70,6 +82,10 @@ defmodule BankingApi.CheckingAccounts do
     checking_account
     |> CheckingAccount.changeset(attrs)
     |> Repo.update()
+  end
+
+  def validate_balance(%CheckingAccount{} = checking_account, value) do
+    checking_account.balance > value
   end
 
   @doc """

@@ -14,5 +14,5 @@ config :banking_api, BankingApi.Repo,
   username: "postgres",
   password: "",
   database: "banking_api_test",
-  hostname: "db",
+  hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

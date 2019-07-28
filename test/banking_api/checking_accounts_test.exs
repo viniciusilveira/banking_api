@@ -7,7 +7,6 @@ defmodule BankingApi.CheckingAccountsTest do
   describe "checking_accounts" do
     alias BankingApi.CheckingAccounts.CheckingAccount
 
-    @valid_attrs params_for(:checking_account)
     @invalid_attrs %{balance: nil, number: nil}
 
     test "list_checking_accounts/0 returns all checking_accounts" do
@@ -18,6 +17,18 @@ defmodule BankingApi.CheckingAccountsTest do
     test "get_checking_account!/1 returns the checking_account with given id" do
       checking_account = insert(:checking_account)
       assert CheckingAccounts.get_checking_account!(checking_account.id) == checking_account
+    end
+
+    test "get_checking_account_by_user_and_number returns checking_account" do
+      user = insert(:user, checking_account: params_for(:checking_account))
+
+      checking_account =
+        CheckingAccounts.get_checking_account_by_user_and_number(
+          user.id,
+          user.checking_account.number
+        )
+
+      assert user.checking_account == checking_account
     end
 
     test "update_checking_account/2 with valid data updates the checking_account" do
