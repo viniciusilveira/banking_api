@@ -47,10 +47,4 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-# Configure your database
-config :banking_api, BankingApi.Repo,
-  username: "postgres",
-  password: "",
-  database: "banking_api_dev",
-  hostname: "localhost",
-  pool_size: 10
+import_config "db/#{Mix.env()}.secret.exs"

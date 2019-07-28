@@ -34,5 +34,5 @@ banking_api-*.tar
 # Alternatively, you may comment the line below and commit the
 # secrets files as long as you replace their contents by environment
 # variables.
-/config/dev.secret.exs
-/config/test.secret.exs
+/config/db/dev.secret.exs
+/config/db/test.secret.exs
