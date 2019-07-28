@@ -66,7 +66,7 @@ defmodule BankingApi.Transactions do
       |> Transaction.changeset(attrs)
       |> Repo.insert()
     else
-      false -> {:error, :insufficent_ballance}
+      false -> {:error, :insufficient_funds}
     end
   end
 
@@ -83,6 +83,38 @@ defmodule BankingApi.Transactions do
       %Transaction{}
       |> Transaction.changeset(attrs)
       |> Repo.insert()
+    end
+  end
+
+  def create_transaction(
+        %{"type" => "transfer"} = attrs,
+        %CheckingAccount{} = drawee_checking_account
+      ) do
+    with true <- CheckingAccounts.validate_balance(drawee_checking_account, attrs["value"]),
+         %CheckingAccount{} = assignor_checking_account <-
+           CheckingAccounts.get_checking_account_by_number(
+             attrs["assignor_checking_account_number"]
+           ),
+         {:ok, %CheckingAccount{}} <-
+           CheckingAccounts.update_checking_account(drawee_checking_account, %{
+             balance: drawee_checking_account.balance - attrs["value"]
+           }),
+         {:ok, %CheckingAccount{}} <-
+           CheckingAccounts.update_checking_account(assignor_checking_account, %{
+             balance: assignor_checking_account.balance + attrs["value"]
+           }) do
+      attrs =
+        Map.merge(attrs, %{
+          "assignor_checking_account_id" => assignor_checking_account.id,
+          "drawee_checking_account_id" => drawee_checking_account.id
+        })
+
+      %Transaction{}
+      |> Transaction.changeset(attrs)
+      |> Repo.insert()
+
+    else
+      false -> {:error, :insufficient_funds}
     end
   end
 

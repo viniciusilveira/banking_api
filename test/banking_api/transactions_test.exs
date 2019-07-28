@@ -41,6 +41,14 @@ defmodule BankingApi.TransactionTest do
       assert transaction.type == attrs["type"]
       assert transaction.value == attrs["value"]
     end
+
+    test "create_transaction/1 with greater value than available" do
+      checking_account = insert(:checking_account)
+      attrs = string_params_for(:withdrawal, value: checking_account.balance + 10_000)
+
+      assert {:error, :insufficient_funds} =
+               Transactions.create_transaction(attrs, checking_account)
+    end
   end
 
   describe "deposit transactions" do
@@ -53,6 +61,41 @@ defmodule BankingApi.TransactionTest do
 
       assert transaction.type == attrs["type"]
       assert transaction.value == attrs["value"]
+    end
+  end
+
+  describe "transfer transactions" do
+    test "create_transaction/1 with valid data creates a transaction" do
+      assignor_checking_account = insert(:checking_account)
+      drawee_checking_account = insert(:checking_account)
+      attrs = string_params_for(:transfer)
+
+      attrs =
+        Map.merge(attrs, %{
+          "drawee_checking_account_id" => drawee_checking_account.id,
+          "assignor_checking_account_number" => assignor_checking_account.number
+        })
+
+      assert {:ok, %Transaction{} = transaction} =
+               Transactions.create_transaction(attrs, assignor_checking_account)
+
+      assert transaction.type == attrs["type"]
+      assert transaction.value == attrs["value"]
+    end
+
+    test "create_transaction/1 with greater value than available" do
+      assignor_checking_account = insert(:checking_account)
+      drawee_checking_account = insert(:checking_account)
+      attrs = string_params_for(:transfer, value: drawee_checking_account.balance + 10_000)
+
+      attrs =
+        Map.merge(attrs, %{
+          "drawee_checking_account_id" => drawee_checking_account.id,
+          "assignor_checking_account_number" => assignor_checking_account.number
+        })
+
+      assert {:error, :insufficient_funds} =
+               Transactions.create_transaction(attrs, assignor_checking_account)
     end
   end
 end

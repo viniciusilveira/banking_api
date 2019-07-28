@@ -18,6 +18,15 @@ defmodule BankingApi.TransactionFactory do
           type: "deposit"
         }
       end
+
+      def transfer_factory do
+        %Transaction{
+          value: 10_000,
+          assignor_checking_account: insert(:checking_account),
+          drawee_checking_account: insert(:checking_account),
+          type: "transfer"
+        }
+      end
     end
   end
 end
