@@ -20,6 +20,13 @@ defmodule BankingApiWeb.FallbackController do
     |> render(:"304")
   end
 
+  def call(conn, {:error, :invalid_value}) do
+    conn
+    |> put_status(:not_modified)
+    |> put_view(BankingApiWeb.ErrorView)
+    |> render(:"304")
+  end
+
   def call(conn, {:error, :unauthorized}) do
     conn
     |> put_status(:unauthorized)
