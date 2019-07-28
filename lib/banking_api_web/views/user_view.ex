@@ -6,15 +6,15 @@ defmodule BankingApiWeb.UserView do
     %{data: render_many(users, UserView, "user.json")}
   end
 
-  def render("show.json", %{jwt: token, user: user} = data) do
-    %{data: render_one(data, UserView, "user.json")}
+  def render("show.json", %{user: user, jwt: token}) do
+    %{data: render(UserView, "user.json", %{user: user, jwt: token})}
   end
 
-  def render("user.json", %{jwt: token, user: user}) do
+  def render("user.json", %{user: user, jwt: token}) do
     %{
       user: %{
         id: user.id,
-        mail: user.email,
+        email: user.email,
         name: user.name
       },
       checking_account: %{
@@ -23,6 +23,12 @@ defmodule BankingApiWeb.UserView do
         balance: user.checking_account.balance
       },
       token: token
+    }
+  end
+
+  def render("jwt.json", %{jwt: token}) do
+    %{
+      jwt: token
     }
   end
 end

@@ -29,7 +29,7 @@ echo "\nPostgres is available: continuing with database setup..."
 mix ecto.create
 mix ecto.migrate
 
-# echo "\nTesting the installation..."
+echo "\nTesting the installation..."
 # "Prove" that install was successful by running the tests
 # mix test
 

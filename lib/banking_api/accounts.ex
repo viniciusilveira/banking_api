@@ -7,7 +7,6 @@ defmodule BankingApi.Accounts do
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   alias BankingApi.Accounts.User
-  alias BankingApi.CheckingAccounts
   alias BankingApi.Guardian
   alias BankingApi.Repo
 
@@ -25,7 +24,7 @@ defmodule BankingApi.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id), do: User |> Repo.get!(id) |> Repo.preload([:checking_account])
 
   def token_sign_in(email, password) do
     case email_password_auth(email, password) do
@@ -74,11 +73,6 @@ defmodule BankingApi.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    attrs =
-      Map.merge(attrs, %{
-        "checking_account" => %{number: CheckingAccounts.generate_number(), balance: 100_000}
-      })
-
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()

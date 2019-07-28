@@ -2,6 +2,7 @@ defmodule BankingApiWeb.UserControllerTest do
   use BankingApiWeb.ConnCase
 
   import BankingApi.Factory
+  alias BankingApi.Accounts
 
   @create_attrs params_for(:user)
   @invalid_attrs %{email: nil, name: nil, password: nil, password_confirmation: nil}
@@ -13,7 +14,16 @@ defmodule BankingApiWeb.UserControllerTest do
   describe "create user" do
     test "renders user when data is valid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
-      assert %{"jwt" => _token} = json_response(conn, 200)
+
+      assert response = json_response(conn, 200)["data"]
+
+      user = Accounts.get_user!(response["user"]["id"])
+
+      assert user.id == response["user"]["id"]
+      assert user.name == response["user"]["name"]
+      assert user.email == response["user"]["email"]
+      assert user.checking_account.number == response["checking_account"]["number"]
+      assert user.checking_account.balance == response["checking_account"]["balance"]
     end
 
     test "renders error when password is invalid", %{conn: conn} do
