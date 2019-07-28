@@ -76,9 +76,32 @@ defmodule BankingApiWeb.TransactionControllerTest do
       assert %{"errors" => %{"detail" => "Not Found"}} = json_response(conn, 404)
     end
 
-    test "renders deposit transaction when data is valid", %{conn: conn, user: user} do
+    test "renders deposit transaction when data is valid and checking account as same user authenticated",
+         %{conn: conn, user: user} do
       transaction_attrs = params_for(:deposit)
       checking_account = user.checking_account
+
+      create_attrs = %{
+        value: transaction_attrs.value,
+        assignor_checking_account_number: checking_account.number,
+        type: transaction_attrs.type
+      }
+
+      conn = post(conn, Routes.transaction_path(conn, :create), transaction: create_attrs)
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      conn = get(conn, Routes.transaction_path(conn, :show, id))
+      assert response = json_response(conn, 200)["data"]
+
+      assert id == response["id"]
+      assert create_attrs.type == response["type"]
+      assert create_attrs.value == response["value"]
+    end
+
+    test "renders deposit transaction when data is valid and checking account is do another user",
+         %{conn: conn} do
+      transaction_attrs = params_for(:deposit)
+      checking_account = insert(:checking_account)
 
       create_attrs = %{
         value: transaction_attrs.value,
