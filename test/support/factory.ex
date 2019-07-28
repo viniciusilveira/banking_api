@@ -3,6 +3,7 @@ defmodule BankingApi.Factory do
 
   use BankingApi.{
     CheckingAccountFactory,
+    TransactionFactory,
     UserFactory
   }
 end

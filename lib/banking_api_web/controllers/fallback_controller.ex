@@ -13,6 +13,20 @@ defmodule BankingApiWeb.FallbackController do
     |> render("error.json", changeset: changeset)
   end
 
+  def call(conn, {:error, :insufficient_funds}) do
+    conn
+    |> put_status(:not_modified)
+    |> put_view(BankingApiWeb.ErrorView)
+    |> render(:"304")
+  end
+
+  def call(conn, {:error, :invalid_value}) do
+    conn
+    |> put_status(:not_modified)
+    |> put_view(BankingApiWeb.ErrorView)
+    |> render(:"304")
+  end
+
   def call(conn, {:error, :unauthorized}) do
     conn
     |> put_status(:unauthorized)

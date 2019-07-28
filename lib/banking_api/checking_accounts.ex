@@ -6,6 +6,7 @@ defmodule BankingApi.CheckingAccounts do
   import Ecto.Query, warn: false
   alias BankingApi.Repo
 
+  alias BankingApi.Accounts.User
   alias BankingApi.CheckingAccounts.CheckingAccount
 
   def generate_number do
@@ -30,14 +31,6 @@ defmodule BankingApi.CheckingAccounts do
     Repo.all(CheckingAccount)
   end
 
-  def list_checking_accounts_by_number(number) do
-    query =
-      from ca in CheckingAccount,
-        where: ca.number == ^number
-
-    Repo.all(query)
-  end
-
   @doc """
   Gets a single checking_account.
 
@@ -53,6 +46,29 @@ defmodule BankingApi.CheckingAccounts do
 
   """
   def get_checking_account!(id), do: Repo.get!(CheckingAccount, id)
+
+  def get_checking_account_by_number(number) do
+    with %CheckingAccount{} = checking_account <- Repo.get_by(CheckingAccount, number: number) do
+      checking_account
+    else
+      _ -> {:error, :not_found}
+    end
+  end
+
+  def get_checking_account_by_user_and_number(user_id, number) do
+    query =
+      from user in User,
+        join: checking_account in assoc(user, :checking_account),
+        where: checking_account.number == ^number,
+        where: user.id == ^user_id,
+        select: checking_account
+
+    with %CheckingAccount{} = checking_account <- Repo.one(query) do
+      checking_account
+    else
+      _ -> {:error, :not_found}
+    end
+  end
 
   @doc """
   Updates a checking_account.
@@ -72,6 +88,10 @@ defmodule BankingApi.CheckingAccounts do
     |> Repo.update()
   end
 
+  def validate_balance(%CheckingAccount{} = checking_account, value) do
+    checking_account.balance > value
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking checking_account changes.
 
@@ -83,5 +103,13 @@ defmodule BankingApi.CheckingAccounts do
   """
   def change_checking_account(%CheckingAccount{} = checking_account) do
     CheckingAccount.changeset(checking_account, %{})
+  end
+
+  defp list_checking_accounts_by_number(number) do
+    query =
+      from ca in CheckingAccount,
+        where: ca.number == ^number
+
+    Repo.all(query)
   end
 end
