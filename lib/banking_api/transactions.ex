@@ -44,11 +44,14 @@ defmodule BankingApi.Transactions do
 
   ## Examples
 
-      iex> create_transaction(%{field: value})
+      iex> create_transaction(%{field: value}, %CheckingAccount{})
       {:ok, %Transaction{}}
 
-      iex> create_transaction(%{field: bad_value})
+      iex> create_transaction(%{field: bad_value}, %CheckingAccount{})
       {:error, %Ecto.Changeset{}}
+
+      iex> create_transaction(%{field: bad_value}, %CheckingAccount{})
+      {:error, :insufficient_funds}
 
   """
   def create_transaction(
@@ -112,7 +115,6 @@ defmodule BankingApi.Transactions do
       %Transaction{}
       |> Transaction.changeset(attrs)
       |> Repo.insert()
-
     else
       false -> {:error, :insufficient_funds}
     end

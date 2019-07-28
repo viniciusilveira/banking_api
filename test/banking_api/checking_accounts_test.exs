@@ -19,6 +19,15 @@ defmodule BankingApi.CheckingAccountsTest do
       assert CheckingAccounts.get_checking_account!(checking_account.id) == checking_account
     end
 
+    test "get_checking_account_by_number returns checking_account" do
+      user = insert(:user, checking_account: params_for(:checking_account))
+
+      checking_account =
+        CheckingAccounts.get_checking_account_by_number(user.checking_account.number)
+
+      assert user.checking_account == checking_account
+    end
+
     test "get_checking_account_by_user_and_number returns checking_account" do
       user = insert(:user, checking_account: params_for(:checking_account))
 
@@ -48,6 +57,18 @@ defmodule BankingApi.CheckingAccountsTest do
                CheckingAccounts.update_checking_account(checking_account, @invalid_attrs)
 
       assert checking_account == CheckingAccounts.get_checking_account!(checking_account.id)
+    end
+
+    test "validate_balance/2 return true" do
+      checking_account = insert(:checking_account)
+
+      assert true == CheckingAccounts.validate_balance(checking_account, 10_000)
+    end
+
+    test "validate_balance/2 return false" do
+      checking_account = insert(:checking_account)
+
+      assert false == CheckingAccounts.validate_balance(checking_account, 200_000)
     end
 
     test "change_checking_account/1 returns a checking_account changeset" do
