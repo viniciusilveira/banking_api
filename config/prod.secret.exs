@@ -14,5 +14,5 @@ config :banking_api, BankingApiWeb.Endpoint,
 # Configure your database
 config :banking_api, BankingApi.Repo,
   ssl: true,
-  url: "postgresql-trapezoidal-42591",
+  url: System.get_env("DATABASE_URL"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
