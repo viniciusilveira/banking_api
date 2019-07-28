@@ -11,19 +11,6 @@ defmodule BankingApi.Transactions do
   alias BankingApi.Transactions.Transaction
 
   @doc """
-  Returns the list of transactions.
-
-  ## Examples
-
-      iex> list_transactions()
-      [%Transaction{}, ...]
-
-  """
-  def list_transactions do
-    Repo.all(Transaction)
-  end
-
-  @doc """
   Gets a single transaction.
 
   Raises `Ecto.NoResultsError` if the Transaction does not exist.

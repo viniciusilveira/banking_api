@@ -13,13 +13,6 @@ defmodule BankingApiWeb.TransactionControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json"), user: user}
   end
 
-  describe "index" do
-    test "lists all transactions", %{conn: conn} do
-      conn = get(conn, Routes.transaction_path(conn, :index))
-      assert json_response(conn, 200)["data"] == []
-    end
-  end
-
   describe "create transaction" do
     test "renders withdrawal transaction when data is valid", %{conn: conn, user: user} do
       transaction_attrs = params_for(:withdrawal)

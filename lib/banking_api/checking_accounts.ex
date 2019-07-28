@@ -9,6 +9,15 @@ defmodule BankingApi.CheckingAccounts do
   alias BankingApi.Accounts.User
   alias BankingApi.CheckingAccounts.CheckingAccount
 
+  @doc """
+  Returns a unique checking account number.
+
+  ## Examples
+
+      iex> generate_number()
+      "1234567890"
+
+  """
   def generate_number do
     number = String.slice(String.replace(to_string(:rand.uniform()), "0.", ""), 0..10)
 
@@ -47,6 +56,20 @@ defmodule BankingApi.CheckingAccounts do
   """
   def get_checking_account!(id), do: Repo.get!(CheckingAccount, id)
 
+  @doc """
+  Gets a single checking_account by number.
+
+  Returns not_found if number is invalid.
+
+  ## Examples
+
+      iex> get_checking_account_by_number(1234567890)
+      %CheckingAccount{}
+
+      iex> get_checking_account_by_number(456)
+      ** {:error, :not_found}
+
+  """
   def get_checking_account_by_number(number) do
     with %CheckingAccount{} = checking_account <- Repo.get_by(CheckingAccount, number: number) do
       checking_account
@@ -55,6 +78,20 @@ defmodule BankingApi.CheckingAccounts do
     end
   end
 
+  @doc """
+  Gets a single checking_account by number and user id.
+
+  Returns not_found if number or user is invalid.
+
+  ## Examples
+
+      iex> get_checking_account_by_user_and_number(1, 1234567890)
+      %CheckingAccount{}
+
+      iex> get_checking_account_by_user_and_number(0, 1234567890)
+      ** {:error, :not_found}
+
+  """
   def get_checking_account_by_user_and_number(user_id, number) do
     query =
       from user in User,
@@ -88,6 +125,18 @@ defmodule BankingApi.CheckingAccounts do
     |> Repo.update()
   end
 
+  @doc """
+  Validate if checking account as a balance for a executing transaction.
+
+  ## Examples
+
+      iex> validate_balance(checking_account, 1000)
+      true
+
+      iex> validate_balance(checking_account, 100_000_000)
+      false
+
+  """
   def validate_balance(%CheckingAccount{} = checking_account, value) do
     checking_account.balance > value
   end

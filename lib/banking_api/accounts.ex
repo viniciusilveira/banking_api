@@ -26,6 +26,20 @@ defmodule BankingApi.Accounts do
   """
   def get_user!(id), do: User |> Repo.get!(id) |> Repo.preload([:checking_account])
 
+  @doc """
+  Generate Token
+
+  Return unauthorized if error
+
+  ## Examples
+
+  iex> token_sign_in("email@email.com", "passwd1234")
+  "token"
+
+  iex> token_sign_in("email@email.com", "passwd1234")
+  ** {:error, :unauthorized}
+
+  """
   def token_sign_in(email, password) do
     case email_password_auth(email, password) do
       {:ok, user} ->
@@ -34,6 +48,24 @@ defmodule BankingApi.Accounts do
       _ ->
         {:error, :unauthorized}
     end
+  end
+
+  @doc """
+  Creates a user.
+
+  ## Examples
+
+      iex> create_user(%{field: value})
+      {:ok, %User{}}
+
+      iex> create_user(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_user(attrs \\ %{}) do
+    %User{}
+    |> User.changeset(attrs)
+    |> Repo.insert()
   end
 
   defp get_by_email(email) when is_binary(email) do
@@ -58,23 +90,5 @@ defmodule BankingApi.Accounts do
   defp email_password_auth(email, password) when is_binary(email) and is_binary(password) do
     with {:ok, user} <- get_by_email(email),
          do: verify_password(password, user)
-  end
-
-  @doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
   end
 end
