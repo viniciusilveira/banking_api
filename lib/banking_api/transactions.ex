@@ -58,7 +58,8 @@ defmodule BankingApi.Transactions do
         %{"type" => "withdrawal"} = attrs,
         %CheckingAccount{} = drawee_checking_account
       ) do
-    with true <- CheckingAccounts.validate_balance(drawee_checking_account, attrs["value"]),
+    with {:ok, :valid} <- validate_transaction_value(attrs),
+         true <- CheckingAccounts.validate_balance(drawee_checking_account, attrs["value"]),
          {:ok, %CheckingAccount{}} <-
            CheckingAccounts.update_checking_account(drawee_checking_account, %{
              balance: drawee_checking_account.balance - attrs["value"]
@@ -68,6 +69,7 @@ defmodule BankingApi.Transactions do
       do_create_transaction(attrs)
     else
       false -> {:error, :insufficient_funds}
+      error -> error
     end
   end
 
@@ -75,13 +77,16 @@ defmodule BankingApi.Transactions do
         %{"type" => "deposit"} = attrs,
         %CheckingAccount{} = assignor_checking_account
       ) do
-    with {:ok, %CheckingAccount{}} <-
+    with {:ok, :valid} <- validate_transaction_value(attrs),
+         {:ok, %CheckingAccount{}} <-
            CheckingAccounts.update_checking_account(assignor_checking_account, %{
              balance: assignor_checking_account.balance + attrs["value"]
            }) do
       attrs = Map.merge(attrs, %{"assignor_checking_account_id" => assignor_checking_account.id})
 
       do_create_transaction(attrs)
+    else
+      error -> error
     end
   end
 
@@ -89,7 +94,8 @@ defmodule BankingApi.Transactions do
         %{"type" => "transfer"} = attrs,
         %CheckingAccount{} = drawee_checking_account
       ) do
-    with true <- CheckingAccounts.validate_balance(drawee_checking_account, attrs["value"]),
+    with {:ok, :valid} <- validate_transaction_value(attrs),
+         true <- CheckingAccounts.validate_balance(drawee_checking_account, attrs["value"]),
          %CheckingAccount{} = assignor_checking_account <-
            CheckingAccounts.get_checking_account_by_number(
              attrs["assignor_checking_account_number"]
@@ -110,7 +116,11 @@ defmodule BankingApi.Transactions do
 
       do_create_transaction(attrs)
     else
-      false -> {:error, :insufficient_funds}
+      false ->
+        {:error, :insufficient_funds}
+
+      error ->
+        error
     end
   end
 
@@ -125,6 +135,14 @@ defmodule BankingApi.Transactions do
   """
   def change_transaction(%Transaction{} = transaction) do
     Transaction.changeset(transaction, %{})
+  end
+
+  defp validate_transaction_value(%{"value" => value}) do
+    with true <- value > 0 do
+      {:ok, :valid}
+    else
+      _ -> {:error, :invalid_value}
+    end
   end
 
   defp do_create_transaction(attrs) do

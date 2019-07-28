@@ -16,7 +16,6 @@ defmodule BankingApiWeb.TransactionController do
 
   def create(conn, %{"transaction" => %{"type" => "withdrawal"} = transaction_params}) do
     with %User{} = user <- Guardian.Plug.current_resource(conn),
-         {:ok, :valid} <- validate_transaction_value(transaction_params),
          %CheckingAccount{} = drawee_checking_account <-
            CheckingAccounts.get_checking_account_by_user_and_number(
              user.id,
@@ -30,7 +29,6 @@ defmodule BankingApiWeb.TransactionController do
 
   def create(conn, %{"transaction" => %{"type" => "deposit"} = transaction_params}) do
     with %User{} <- Guardian.Plug.current_resource(conn),
-         {:ok, :valid} <- validate_transaction_value(transaction_params),
          %CheckingAccount{} = assignor_checking_account <-
            CheckingAccounts.get_checking_account_by_number(
              transaction_params["assignor_checking_account_number"]
@@ -43,7 +41,6 @@ defmodule BankingApiWeb.TransactionController do
 
   def create(conn, %{"transaction" => %{"type" => "transfer"} = transaction_params}) do
     with %User{} = user <- Guardian.Plug.current_resource(conn),
-         {:ok, :valid} <- validate_transaction_value(transaction_params),
          %CheckingAccount{} = drawee_checking_account <-
            CheckingAccounts.get_checking_account_by_user_and_number(
              user.id,
@@ -65,13 +62,5 @@ defmodule BankingApiWeb.TransactionController do
     |> put_status(:created)
     |> put_resp_header("location", Routes.transaction_path(conn, :show, transaction))
     |> render("show.json", transaction: transaction)
-  end
-
-  defp validate_transaction_value(%{"value" => value}) do
-    with true <- value > 0 do
-      {:ok, :valid}
-    else
-      _ -> {:error, :invalid_value}
-    end
   end
 end

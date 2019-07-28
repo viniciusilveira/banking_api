@@ -226,10 +226,11 @@ defmodule BankingApiWeb.TransactionControllerTest do
     end
 
     test "transfer transaction renders error when value is a negative", %{
-      conn: conn
+      conn: conn,
+      user: user
     } do
       transaction_attrs = params_for(:transfer, value: -100)
-      drawee_checking_account = insert(:checking_account)
+      drawee_checking_account = user.checking_account
       assignor_checking_account = insert(:checking_account)
 
       create_attrs = %{
@@ -240,6 +241,7 @@ defmodule BankingApiWeb.TransactionControllerTest do
       }
 
       conn = post(conn, Routes.transaction_path(conn, :create), transaction: create_attrs)
+
       assert %{"errors" => %{"detail" => "Not Modified"}} == json_response(conn, 304)
     end
   end

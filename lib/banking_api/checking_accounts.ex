@@ -31,14 +31,6 @@ defmodule BankingApi.CheckingAccounts do
     Repo.all(CheckingAccount)
   end
 
-  def list_checking_accounts_by_number(number) do
-    query =
-      from ca in CheckingAccount,
-        where: ca.number == ^number
-
-    Repo.all(query)
-  end
-
   @doc """
   Gets a single checking_account.
 
@@ -111,5 +103,13 @@ defmodule BankingApi.CheckingAccounts do
   """
   def change_checking_account(%CheckingAccount{} = checking_account) do
     CheckingAccount.changeset(checking_account, %{})
+  end
+
+  defp list_checking_accounts_by_number(number) do
+    query =
+      from ca in CheckingAccount,
+        where: ca.number == ^number
+
+    Repo.all(query)
   end
 end
