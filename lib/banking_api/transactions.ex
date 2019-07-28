@@ -65,9 +65,7 @@ defmodule BankingApi.Transactions do
            }) do
       attrs = Map.merge(attrs, %{"drawee_checking_account_id" => drawee_checking_account.id})
 
-      %Transaction{}
-      |> Transaction.changeset(attrs)
-      |> Repo.insert()
+      do_create_transaction(attrs)
     else
       false -> {:error, :insufficient_funds}
     end
@@ -83,9 +81,7 @@ defmodule BankingApi.Transactions do
            }) do
       attrs = Map.merge(attrs, %{"assignor_checking_account_id" => assignor_checking_account.id})
 
-      %Transaction{}
-      |> Transaction.changeset(attrs)
-      |> Repo.insert()
+      do_create_transaction(attrs)
     end
   end
 
@@ -112,9 +108,7 @@ defmodule BankingApi.Transactions do
           "drawee_checking_account_id" => drawee_checking_account.id
         })
 
-      %Transaction{}
-      |> Transaction.changeset(attrs)
-      |> Repo.insert()
+      do_create_transaction(attrs)
     else
       false -> {:error, :insufficient_funds}
     end
@@ -131,5 +125,11 @@ defmodule BankingApi.Transactions do
   """
   def change_transaction(%Transaction{} = transaction) do
     Transaction.changeset(transaction, %{})
+  end
+
+  defp do_create_transaction(attrs) do
+    %Transaction{}
+    |> Transaction.changeset(attrs)
+    |> Repo.insert()
   end
 end
