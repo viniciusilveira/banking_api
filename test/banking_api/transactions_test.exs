@@ -3,10 +3,9 @@ defmodule BankingApi.TransactionTest do
   import BankingApi.Factory
 
   alias BankingApi.Transactions
+  alias BankingApi.Transactions.Transaction
 
   describe "transactions" do
-    alias BankingApi.Transactions.Transaction
-
     test "list_transactions/0 returns all transactions" do
       transaction = insert(:withdrawal)
       assert [return_transaction] = Transactions.list_transactions()
@@ -25,6 +24,13 @@ defmodule BankingApi.TransactionTest do
       assert return_transaction.type == transaction.type
     end
 
+    test "change_transaction/1 returns a transaction changeset" do
+      transaction = build(:withdrawal)
+      assert %Ecto.Changeset{} = Transactions.change_transaction(transaction)
+    end
+  end
+
+  describe "withdrawal transactions" do
     test "create_transaction/1 with valid data creates a transaction" do
       checking_account = insert(:checking_account)
       attrs = string_params_for(:withdrawal)
@@ -35,10 +41,18 @@ defmodule BankingApi.TransactionTest do
       assert transaction.type == attrs["type"]
       assert transaction.value == attrs["value"]
     end
+  end
 
-    test "change_transaction/1 returns a transaction changeset" do
-      transaction = build(:withdrawal)
-      assert %Ecto.Changeset{} = Transactions.change_transaction(transaction)
+  describe "deposit transactions" do
+    test "create_transaction/1 with valid data creates a transaction" do
+      checking_account = insert(:checking_account)
+      attrs = string_params_for(:deposit)
+
+      assert {:ok, %Transaction{} = transaction} =
+               Transactions.create_transaction(attrs, checking_account)
+
+      assert transaction.type == attrs["type"]
+      assert transaction.value == attrs["value"]
     end
   end
 end

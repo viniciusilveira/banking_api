@@ -70,6 +70,22 @@ defmodule BankingApi.Transactions do
     end
   end
 
+  def create_transaction(
+        %{"type" => "deposit"} = attrs,
+        %CheckingAccount{} = assignor_checking_account
+      ) do
+    with {:ok, %CheckingAccount{}} <-
+           CheckingAccounts.update_checking_account(assignor_checking_account, %{
+             balance: assignor_checking_account.balance + attrs["value"]
+           }) do
+      attrs = Map.merge(attrs, %{"assignor_checking_account_id" => assignor_checking_account.id})
+
+      %Transaction{}
+      |> Transaction.changeset(attrs)
+      |> Repo.insert()
+    end
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking transaction changes.
 
