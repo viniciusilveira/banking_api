@@ -132,3 +132,19 @@ docker-compose up --build
 ```bash
 docker-compose run web mix test
 ```
+
+
+### Postman
+
+O Postman é uma ferramenta que tem como objetivo testar serviços RESTful (Web APIs) por meio do envio de requisições HTTP e da análise do seu retorno.
+
+Para utilizar os endpoints da aplicação com o postman, importe a collection pelo link https://www.getpostman.com/collections/9d43de74607f4889360a
+e importe as environments a partir do arquivo BankApi.postman_environment.json
+
+Para executar autenticações autenticadas na aba `Authorization` do postman selecione a opção `Baerer Token` em type e adicione o token retornado na requisição de login ou autenticação.
+
+Documentação da API no postman: https://documenter.getpostman.com/view/1274212/SVYkvLtb?version=latest
+
+Para mais informações sobre o postman, acesse: https://www.getpostman.com/
+
+
