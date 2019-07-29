@@ -9,10 +9,4 @@ config :banking_api, BankingApiWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-# Configure your database
-config :banking_api, BankingApi.Repo,
-  username: "postgres",
-  password: "",
-  database: "banking_api_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+import_config "db/#{Mix.env()}.secret.exs"
