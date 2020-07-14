@@ -71,9 +71,8 @@ defmodule BankingApi.CheckingAccounts do
 
   """
   def get_checking_account_by_number(number) do
-    with %CheckingAccount{} = checking_account <- Repo.get_by(CheckingAccount, number: number) do
-      checking_account
-    else
+    case checking_account = Repo.get_by(CheckingAccount, number: number) do
+      %CheckingAccount{} -> checking_account
       _ -> {:error, :not_found}
     end
   end
@@ -100,9 +99,8 @@ defmodule BankingApi.CheckingAccounts do
         where: user.id == ^user_id,
         select: checking_account
 
-    with %CheckingAccount{} = checking_account <- Repo.one(query) do
-      checking_account
-    else
+    case checking_account = Repo.one(query) do
+      %CheckingAccount{} -> checking_account
       _ -> {:error, :not_found}
     end
   end

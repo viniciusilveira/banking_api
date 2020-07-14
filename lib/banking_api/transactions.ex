@@ -125,9 +125,8 @@ defmodule BankingApi.Transactions do
   end
 
   defp validate_transaction_value(%{"value" => value}) do
-    with true <- value > 0 do
-      {:ok, :valid}
-    else
+    case value > 0 do
+      true -> {:ok, :valid}
       _ -> {:error, :invalid_value}
     end
   end
