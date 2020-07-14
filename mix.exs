@@ -5,7 +5,7 @@ defmodule BankingApi.MixProject do
     [
       app: :banking_api,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -33,8 +33,7 @@ defmodule BankingApi.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.0"},
-      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix, "~> 1.5"},
       {:ex_json_schema, "~> 0.5"},
       {:ex_machina, "~> 2.3"},
       {:faker, "~> 0.12", only: :test},
