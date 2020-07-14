@@ -15,7 +15,7 @@ config :banking_api, BankingApiWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "ZflInU6GfTCBtYa1wU7WvLWPPJG5epH56zjeYr7J5q6BOItiCKEGXCDUXRb7BYai",
   render_errors: [view: BankingApiWeb.ErrorView, accepts: ~w(json)],
-  pubsub: [name: BankingApi.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: MyApp.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -10,6 +10,8 @@ defmodule BankingApi.Application do
     children = [
       # Start the Ecto repository
       BankingApi.Repo,
+      # Start the PubSub system
+      {Phoenix.PubSub, name: BankingApi.PubSub},
       # Start the endpoint when the application starts
       BankingApiWeb.Endpoint
       # Starts a worker by calling: BankingApi.Worker.start_link(arg)

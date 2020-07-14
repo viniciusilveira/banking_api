@@ -37,15 +37,16 @@ defmodule BankingApi.MixProject do
       {:ex_json_schema, "~> 0.5"},
       {:ex_machina, "~> 2.3"},
       {:faker, "~> 0.12", only: :test},
-      {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.0"},
+      {:phoenix_ecto, "~> 4.1"},
+      {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
       {:guardian, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
+      {:phoenix_pubsub, "~> 2.0"},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
