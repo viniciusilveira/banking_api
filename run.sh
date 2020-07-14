@@ -4,7 +4,6 @@
 
 set -e
 
-
 # Ensure the app's dependencies are installed
 mix deps.get
 
@@ -26,7 +25,9 @@ done
 echo "\nPostgres is available: continuing with database setup..."
 
 # Potentially Set up the database
+echo "\nCreate Database"
 mix ecto.create
+echo "\nRun Migrations"
 mix ecto.migrate
 
 echo "\nTesting the installation..."
