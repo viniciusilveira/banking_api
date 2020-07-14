@@ -77,7 +77,7 @@ Duplique os arquivos `dev` e `test` da pasta `banking_api/config/db`
   cp config/db/test.secret.exs.example config/db/test.secret.exs
   ```
 
-Configure de acordo com as informações do Banco de dados;
+Configure de acordo com as informações do seu banco de dados;
 
 Crie e atualize seu banco com:
 
@@ -118,8 +118,6 @@ Para executar os testes, utilize:
   cp config/db/dev.secret.exs.example config/db/dev.secret.exs
   cp config/db/test.secret.exs.example config/db/test.secret.exs
   ```
-
-Altere o hostname nos arquivos para `db`
 
 2. Execute o comando abaixo:
 
