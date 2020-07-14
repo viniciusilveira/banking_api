@@ -1,6 +1,5 @@
 defmodule BankingApi.Accounts.User do
   use Ecto.Schema
-  import Comeonin.Bcrypt, only: [hashpwsalt: 1]
   import Ecto.Changeset
   alias BankingApi.Accounts.User
   alias BankingApi.CheckingAccounts.CheckingAccount
@@ -34,7 +33,7 @@ defmodule BankingApi.Accounts.User do
   defp put_password_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
-        put_change(changeset, :password_hash, hashpwsalt(pass))
+        put_change(changeset, :password_hash, Bcrypt.hash_pwd_salt(pass))
 
       _ ->
         changeset
