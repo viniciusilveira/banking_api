@@ -22,5 +22,9 @@ defmodule BankingApiWeb.Router do
     pipe_through [:api, :jwt_authenticated]
 
     resources "/transactions", TransactionController, only: [:create, :index, :show]
+
+    scope "/backoffice" do
+      get "/report", TransactionController, :report, as: :report
+    end
   end
 end

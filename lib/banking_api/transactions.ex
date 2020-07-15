@@ -10,6 +10,28 @@ defmodule BankingApi.Transactions do
   alias BankingApi.CheckingAccounts.CheckingAccount
   alias BankingApi.Transactions.Transaction
 
+  def report do
+    daily = daily_total()
+
+    case daily do
+      nil ->
+        {:ok, :no_transactions}
+
+      _ ->
+        total =
+          daily
+          |> Enum.map(fn d -> d.total end)
+          |> Enum.sum()
+
+        %{
+          daily: daily,
+          monthly: monthly_total(daily),
+          yearly: yearly_total(daily),
+          total: total
+        }
+    end
+  end
+
   @doc """
   Gets a single transaction.
 
@@ -122,6 +144,53 @@ defmodule BankingApi.Transactions do
   """
   def change_transaction(%Transaction{} = transaction) do
     Transaction.changeset(transaction, %{})
+  end
+
+  defp daily_total do
+    query =
+      from transaction in Transaction,
+        group_by: [
+          fragment("?::date", transaction.inserted_at)
+        ],
+        order_by: [desc: fragment("?::date", transaction.inserted_at)],
+        select: %{
+          total: fragment("SUM(value)"),
+          day: fragment("?::date", transaction.inserted_at)
+        }
+
+    Repo.all(query)
+  end
+
+  defp monthly_total(daily_total, report \\ %{})
+  defp monthly_total([], report), do: report
+
+  defp monthly_total(daily_total, report) do
+    first = List.first(daily_total)
+    key = "#{first.day.month}/#{first.day.year}"
+
+    mount_report(report, daily_total, key, &monthly_total/2)
+  end
+
+  defp yearly_total(daily_total, report \\ %{})
+  defp yearly_total([], report), do: report
+
+  defp yearly_total(daily_total, report) do
+    key = "#{List.first(daily_total).day.year}"
+
+    mount_report(report, daily_total, key, &yearly_total/2)
+  end
+
+  defp mount_report(report, daily_total, key, recursive_function) do
+    [first | tail] = daily_total
+
+    case Map.has_key?(report, key) do
+      true ->
+        total = report[key] + first.total
+        recursive_function.(tail, Map.merge(report, %{"#{key}" => total}))
+
+      _ ->
+        recursive_function.(tail, Map.merge(report, %{"#{key}" => first.total}))
+    end
   end
 
   defp validate_transaction_value(%{"value" => value}) do

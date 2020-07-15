@@ -47,7 +47,8 @@ defmodule BankingApi.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.1"},
       {:phoenix_pubsub, "~> 2.0"},
-      {:credo, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:timex, "~> 3.5"}
     ]
   end
 
