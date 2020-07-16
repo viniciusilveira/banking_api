@@ -13,6 +13,16 @@ defmodule BankingApi.UserFactory do
           password_confirmation: "passwd1234"
         }
       end
+
+      def admin_factory do
+        %User{
+          name: Internet.user_name(),
+          email: Internet.email(),
+          password: "passwd1234",
+          password_confirmation: "passwd1234",
+          is_admin: true
+        }
+      end
     end
   end
 end

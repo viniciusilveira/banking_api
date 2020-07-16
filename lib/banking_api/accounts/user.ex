@@ -4,7 +4,8 @@ defmodule BankingApi.Accounts.User do
   alias BankingApi.Accounts.User
   alias BankingApi.CheckingAccounts.CheckingAccount
 
-  @required_fields ~w(email name password password_confirmation is_admin)a
+  @required_fields ~w(email name password password_confirmation)a
+  @optional_fields ~w(is_admin)a
 
   schema "users" do
     field :email, :string
@@ -21,7 +22,7 @@ defmodule BankingApi.Accounts.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, @required_fields)
+    |> cast(attrs, @required_fields ++ @optional_fields)
     |> cast_assoc(:checking_account)
     |> validate_required(@required_fields)
     |> validate_format(:email, ~r/@/)
