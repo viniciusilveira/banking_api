@@ -23,7 +23,7 @@ Para começar, clone o projeto na pasta desejada:
 
 Servidor de banco de dados utilizado.
 
-> MacOS:
+> OSX:
 
   ```bash
   brew install postgres
@@ -46,23 +46,19 @@ Servidor de banco de dados utilizado.
 
 Instalar o `Elixir` e `Erlang` utilizando `asdf`:
 
-> MacOS e Ubuntu
-
   ```bash
   asdf plugin-add erlang https://github.com/asdf-vm/asdf-erlang.git
   asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
 
-  asdf install erlang 21.1
-  asdf install elixir 1.8.1
+  asdf install erlang 23.0
+  asdf install elixir 1.10
   ```
 
 Setar as versões utilizadas como globais:
 
-> MacOS e Ubuntu
-
   ```bash
-  asdf global erlang 21.1
-  asdf global elixir 1.8.1
+  asdf global erlang 23.0
+  asdf global elixir 1.10
   ```
 
 > Caso ocorra algum erro com a versão do `Erlang`, substitua o número da versão por `ref:master`;
@@ -98,7 +94,7 @@ Inicie o servidor Phoenix e execute a aplicação
   ```bash
   mix phx.server
   ```
-Agora você já pode acessar o link `http://localhost:4000/` através de seu navegador.
+Agora você já pode acessar a API através do link `http://localhost:4000/`.
 
 #### 6. Testar
 
@@ -134,6 +130,8 @@ docker-compose run web mix test
 
 ### Postman
 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/c62adbe83b7c4db42d51#?env%5BBanking%20API%5D=W3sia2V5IjoiQVBJX1VSTCIsInZhbHVlIjoiaHR0cHM6Ly9ndWFyZGVkLXJlZWYtNzI3OTYuaGVyb2t1YXBwLmNvbS8iLCJlbmFibGVkIjp0cnVlfSx7ImtleSI6IlVOSVFVRV9TVFJJTkciLCJ2YWx1ZSI6MTU2NDU4MzA1MDMxOSwiZW5hYmxlZCI6dHJ1ZX1d)
+
 O Postman é uma ferramenta que tem como objetivo testar serviços RESTful (Web APIs) por meio do envio de requisições HTTP e da análise do seu retorno.
 
 Para utilizar os endpoints da aplicação com o postman, importe a collection pelo link https://www.getpostman.com/collections/9d43de74607f4889360a
@@ -141,7 +139,7 @@ e importe as environments a partir do arquivo BankApi.postman_environment.json
 
 Para executar autenticações autenticadas na aba `Authorization` do postman selecione a opção `Baerer Token` em type e adicione o token retornado na requisição de login ou autenticação.
 
-Documentação da API no postman: https://documenter.getpostman.com/view/1274212/SVYkvLtb?version=latest
+Documentação da API: https://blue-robot-6636.postman.co/collections/1274212-f59ef137-3d6a-461a-8355-24a99bebc382?version=latest&workspace=1c405cba-a1ae-44cd-8b6a-8fde20c46a62
 
 Para mais informações sobre o postman, acesse: https://www.getpostman.com/
 
