@@ -10,6 +10,10 @@ defmodule BankingApiWeb.UserView do
     %{data: render(UserView, "user.json", %{user: user, jwt: token})}
   end
 
+  def render("show.json", %{admin: admin, jwt: token}) do
+    %{data: render(AdminView, "admin.json", %{admin: admin, jwt: token})}
+  end
+
   def render("user.json", %{user: user, jwt: token}) do
     %{
       user: %{
@@ -21,6 +25,17 @@ defmodule BankingApiWeb.UserView do
         id: user.checking_account.id,
         number: user.checking_account.number,
         balance: user.checking_account.balance
+      },
+      token: token
+    }
+  end
+
+  def render("admin.json", %{admin: admin, jwt: token}) do
+    %{
+      admin: %{
+        id: admin.id,
+        email: admin.email,
+        name: admin.name
       },
       token: token
     }
