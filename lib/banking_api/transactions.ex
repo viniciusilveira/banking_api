@@ -10,6 +10,23 @@ defmodule BankingApi.Transactions do
   alias BankingApi.CheckingAccounts.CheckingAccount
   alias BankingApi.Transactions.Transaction
 
+  @doc """
+  Generate a report of all transactions separated
+  by day, month and year
+
+  ## Examples
+
+      iex> report()
+        %{
+          daily: %{...},
+          monthly: %{...},
+          yearly: %{...},
+          total: some integer value
+        }
+
+      iex> report()
+        {:ok, :no_transactions}
+  """
   def report do
     daily = daily_total()
 

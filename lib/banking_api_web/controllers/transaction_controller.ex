@@ -52,13 +52,6 @@ defmodule BankingApiWeb.TransactionController do
     render(conn, "show.json", transaction: transaction)
   end
 
-  def report(conn, _transaction_params) do
-    with %User{} <- Guardian.Plug.current_resource(conn),
-         report <- Transactions.report() do
-      render(conn, "index.json", report: report)
-    end
-  end
-
   defp render_show(conn, transaction) do
     conn
     |> put_status(:created)

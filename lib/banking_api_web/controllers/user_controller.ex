@@ -22,6 +22,17 @@ defmodule BankingApiWeb.UserController do
     end
   end
 
+  def create(conn, %{"admin" => admin_params}) do
+    with {:ok, %User{} = admin} <-
+           admin_params
+           |> Map.merge(%{"is_admin" => true})
+           |> Accounts.create_user(),
+         {:ok, token, _claims} <-
+           Guardian.encode_and_sign(admin) do
+      conn |> render("show.json", %{jwt: token, admin: admin})
+    end
+  end
+
   def sign_in(conn, %{"email" => email, "password" => password}) do
     case Accounts.token_sign_in(email, password) do
       {:ok, token, _claims} ->

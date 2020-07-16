@@ -4,7 +4,7 @@ defmodule BankingApi.Accounts.User do
   alias BankingApi.Accounts.User
   alias BankingApi.CheckingAccounts.CheckingAccount
 
-  @required_fields ~w(email name password password_confirmation)a
+  @required_fields ~w(email name password password_confirmation is_admin)a
 
   schema "users" do
     field :email, :string
@@ -12,6 +12,7 @@ defmodule BankingApi.Accounts.User do
     field :password_hash, :string
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
+    field :is_admin, :boolean
     belongs_to :checking_account, CheckingAccount
 
     timestamps()
