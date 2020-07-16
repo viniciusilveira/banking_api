@@ -89,4 +89,21 @@ defmodule BankingApi.TransactionTest do
                Transactions.create_transaction(attrs, assignor_checking_account)
     end
   end
+
+  describe "report" do
+    test "return formatted report" do
+      insert_list(10, :withdrawal)
+      insert_list(10, :deposit)
+      insert_list(10, :transfer)
+
+      assert {:ok, report} = Transactions.report()
+
+      assert List.first(report.daily).total == 300_000
+      assert report.total == 300_000
+    end
+
+    test "return no_transactions when does not exists transactions" do
+      assert {:error, :no_transactions} == Transactions.report()
+    end
+  end
 end

@@ -18,13 +18,10 @@ defmodule BankingApiWeb.ReportControllerTest do
       insert_list(10, :deposit)
       insert_list(10, :transfer)
       conn = get(conn, Routes.report_path(conn, :index))
+      assert response = json_response(conn, 200)["data"]
 
-      assert %{
-               "daily" => [%{"day" => "2020-07-16", "total" => 300_000}],
-               "monthly" => %{"7/2020" => 300_000},
-               "total" => 300_000,
-               "yearly" => %{"2020" => 300_000}
-             } == json_response(conn, 200)["data"]
+      assert List.first(response["daily"])["total"] == 300_000
+      assert response["total"] == 300_000
     end
 
     test "renders empty map when does not exists transactions", %{conn: conn} do
