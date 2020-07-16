@@ -4,9 +4,10 @@ defmodule BankingApiWeb.ReportController do
   alias BankingApi.Transactions
 
   def index(conn, _params) do
-    with {:ok, report} <- Transactions.report() do
-      render(conn, "index.json", report: report)
-    else
+    case Transactions.report() do
+      {:ok, report} ->
+        render(conn, "index.json", report: report)
+
       {:error, :no_transactions} ->
         render(conn, "index.json", report: %{})
     end
