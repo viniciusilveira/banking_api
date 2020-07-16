@@ -219,8 +219,11 @@ defmodule BankingApi.Transactions do
   end
 
   defp do_create_transaction(attrs) do
-    %Transaction{}
-    |> Transaction.changeset(attrs)
-    |> Repo.insert()
+    {:ok, transaction} =
+      %Transaction{}
+      |> Transaction.changeset(attrs)
+      |> Repo.insert()
+
+    {:ok, transaction |> Repo.preload(:assignor_checking_account)}
   end
 end
