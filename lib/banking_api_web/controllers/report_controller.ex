@@ -2,14 +2,13 @@ defmodule BankingApiWeb.ReportController do
   use BankingApiWeb, :controller
 
   alias BankingApi.Transactions
-  alias BankingApi.Accounts.User
-
-  action_fallback BankingApiWeb.FallbackController
 
   def index(conn, _params) do
-    with %User{} <- Guardian.Plug.current_resource(conn),
-         report <- Transactions.report() do
+    with {:ok, report} <- Transactions.report() do
       render(conn, "index.json", report: report)
+    else
+      {:error, :no_transactions} ->
+        render(conn, "index.json", report: %{})
     end
   end
 end

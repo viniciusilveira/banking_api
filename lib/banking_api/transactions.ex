@@ -31,8 +31,8 @@ defmodule BankingApi.Transactions do
     daily = daily_total()
 
     case daily do
-      nil ->
-        {:ok, :no_transactions}
+      [] ->
+        {:error, :no_transactions}
 
       _ ->
         total =
@@ -40,12 +40,13 @@ defmodule BankingApi.Transactions do
           |> Enum.map(fn d -> d.total end)
           |> Enum.sum()
 
-        %{
-          daily: daily,
-          monthly: monthly_total(daily),
-          yearly: yearly_total(daily),
-          total: total
-        }
+        {:ok,
+         %{
+           daily: daily,
+           monthly: monthly_total(daily),
+           yearly: yearly_total(daily),
+           total: total
+         }}
     end
   end
 

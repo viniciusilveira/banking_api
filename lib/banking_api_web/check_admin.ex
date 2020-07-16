@@ -13,9 +13,9 @@ defmodule BankingApi.CheckAdmin do
     else
       _ ->
         conn
-        |> put_status(:not_found)
-        |> put_view(BankingApiWeb.ErrorView)
-        |> render(:"404")
+        |> put_status(:unauthorized)
+        |> json(%{error: "Login error"})
+        |> halt
     end
   end
 
@@ -24,6 +24,6 @@ defmodule BankingApi.CheckAdmin do
   end
 
   defp is_admin(_) do
-    {:error, :not_admin}
+    {:error, :unauthorized}
   end
 end
