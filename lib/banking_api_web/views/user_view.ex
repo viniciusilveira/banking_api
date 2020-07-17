@@ -11,7 +11,7 @@ defmodule BankingApiWeb.UserView do
   end
 
   def render("show.json", %{admin: admin, jwt: token}) do
-    %{data: render(AdminView, "admin.json", %{admin: admin, jwt: token})}
+    %{data: render(UserView, "admin.json", %{admin: admin, jwt: token})}
   end
 
   def render("user.json", %{user: user, jwt: token}) do
